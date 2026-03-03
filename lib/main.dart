@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pickleball_timer/setup_screen.dart';
 import 'package:pickleball_timer/timer_screen.dart';
 import 'dart:html' as html;
+import 'package:text_scroll/text_scroll.dart';
 
 void main() {
   runApp(const MyApp());
@@ -60,23 +61,57 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: BottomAppBar(
           color: Theme.of(context).colorScheme.primary,
           child: Container(
-              height: 50,
-              alignment: Alignment.center,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Designed by: Nick Silva',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-              )),
+            height: 50,
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                currentPhase == TimerPhase.intervalTimerRunning
+                    ? const Expanded(
+                        child: TextScroll(
+                          'Created by: Nick Silva! '
+                          '                '
+                          'Don\'t forget to drink water. '
+                          '                '
+                          'Stretching is good for you. '
+                          '                '
+                          'Have fun its just a game. '
+                          '                '
+                          'Feel free to make a donation to nicksplace.org if you like the app. '
+                          '                '
+                          'Follow me on Instagram @_silvadollar because I can write whatever I want here. ╭∩╮(Ο_Ο)╭∩╮ '
+                          '                '
+                          'Thank you for using my app! '
+                          '                '
+                          'Suggestions can be put in the nearest trash can. '
+                          '                '
+                          'Lol I am just kidding <3 '
+                          '                '
+                          'But seriously, if you have any suggestions or want to see a new feature, let me know! '
+                          '                ',
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                          ),
+                          velocity: Velocity(pixelsPerSecond: Offset(50, 0)),
+                        ),
+                      )
+                    : const SizedBox(height: 0),
+                currentPhase == TimerPhase.intervalTimerRunning
+                    ? const SizedBox(width: 10)
+                    : const SizedBox(width: 0),
+                const Text(
+                  'Designed by: Nick Silva',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         backgroundColor: switch (currentPhase) {
-          TimerPhase.idle => Colors.white54,
+          TimerPhase.idle => Colors.white,
           TimerPhase.ready => const Color.fromARGB(255, 196, 133, 39),
           TimerPhase.timerRunning => const Color.fromARGB(255, 34, 113, 36),
           TimerPhase.intervalTimerRunning =>
