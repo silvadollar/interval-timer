@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           '                '
                           'Feel free to make a donation to nicksplace.org if you like the app. '
                           '                '
-                          'Follow me on Instagram @_silvadollar because I can write whatever I want here. ╭∩╮(Ο_Ο)╭∩╮ '
+                          'Follow me on Instagram @silvadollar_ because I can write whatever I want here. ╭∩╮(Ο_Ο)╭∩╮ '
                           '                '
                           'Thank you for using my app! '
                           '                '
@@ -95,17 +95,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           velocity: Velocity(pixelsPerSecond: Offset(50, 0)),
                         ),
                       )
-                    : const SizedBox(height: 0),
-                currentPhase == TimerPhase.intervalTimerRunning
-                    ? const SizedBox(width: 10)
-                    : const SizedBox(width: 0),
-                const Text(
-                  'Designed by: Nick Silva',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
+                    : const Text(
+                        'Designed by: Nick Silva',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white,
+                        ),
+                      ),
               ],
             ),
           ),
