@@ -47,109 +47,136 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(
-          widget.title,
-          style: const TextStyle(
-            fontSize: 24,
-            color: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          title: Text(
+            widget.title,
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
           ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).colorScheme.primary,
-        child: Container(
-            height: 50,
-            alignment: Alignment.center,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Designed by: Nick Silva',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            )),
-      ),
-      backgroundColor: switch (currentPhase) {
-        TimerPhase.idle => Colors.white54,
-        TimerPhase.ready => const Color.fromARGB(255, 196, 133, 39),
-        TimerPhase.timerRunning => const Color.fromARGB(255, 34, 113, 36),
-        TimerPhase.intervalTimerRunning =>
-          const Color.fromARGB(255, 101, 27, 114),
-        TimerPhase.finished => const Color.fromARGB(255, 22, 66, 163),
-      },
-      body: currentPhase == TimerPhase.idle
-          ? SetupScreen(
-              onSave: (r, m, s, iEnabled, iMin, iSec) {
-                setState(() {
-                  rounds = r;
-                  minutes = m;
-                  seconds = s;
-                  intervalEnabled = iEnabled;
-                  intervalMinutes = iMin;
-                  intervalSeconds = iSec;
-                  currentPhase = TimerPhase.ready;
-                });
-              },
-            )
-          : TimerScreen(
-              key: timerKey,
-              rounds: rounds,
-              minutes: minutes,
-              seconds: seconds,
-              intervalEnabled: intervalEnabled,
-              intervalMinutes: intervalMinutes,
-              intervalSeconds: intervalSeconds,
-              onPhaseChanged: (phase) {
-                setState(() {
-                  currentPhase = phase;
-                });
-              },
+        bottomNavigationBar: BottomAppBar(
+          color: Theme.of(context).colorScheme.primary,
+          child: Container(
+              height: 50,
+              alignment: Alignment.center,
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Designed by: Nick Silva',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              )),
+        ),
+        backgroundColor: switch (currentPhase) {
+          TimerPhase.idle => Colors.white54,
+          TimerPhase.ready => const Color.fromARGB(255, 196, 133, 39),
+          TimerPhase.timerRunning => const Color.fromARGB(255, 34, 113, 36),
+          TimerPhase.intervalTimerRunning =>
+            const Color.fromARGB(255, 101, 27, 114),
+          TimerPhase.finished => const Color.fromARGB(255, 22, 66, 163),
+        },
+        body: currentPhase == TimerPhase.idle
+            ? SetupScreen(
+                onSave: (r, m, s, iEnabled, iMin, iSec) {
+                  setState(() {
+                    rounds = r;
+                    minutes = m;
+                    seconds = s;
+                    intervalEnabled = iEnabled;
+                    intervalMinutes = iMin;
+                    intervalSeconds = iSec;
+                    currentPhase = TimerPhase.ready;
+                  });
+                },
+              )
+            : TimerScreen(
+                key: timerKey,
+                rounds: rounds,
+                minutes: minutes,
+                seconds: seconds,
+                intervalEnabled: intervalEnabled,
+                intervalMinutes: intervalMinutes,
+                intervalSeconds: intervalSeconds,
+                onPhaseChanged: (phase) {
+                  setState(() {
+                    currentPhase = phase;
+                  });
+                },
+              ),
+        floatingActionButton: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.bottomRight,
+              child: currentPhase == TimerPhase.ready ||
+                      currentPhase == TimerPhase.timerRunning ||
+                      currentPhase == TimerPhase.intervalTimerRunning ||
+                      currentPhase == TimerPhase.finished
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        if (currentPhase == TimerPhase.finished) {
+                          html.window.location.reload();
+                          return;
+                        } else {
+                          timerKey.currentState?.toggleTimer();
+                        }
+                      },
+                      tooltip: switch (currentPhase) {
+                        TimerPhase.ready => 'Start Timer',
+                        TimerPhase.timerRunning => 'Stop Timer',
+                        TimerPhase.intervalTimerRunning => 'Stop Timer',
+                        TimerPhase.finished => 'Reset Timer',
+                        _ => 'Start Timer',
+                      },
+                      backgroundColor: switch (currentPhase) {
+                        TimerPhase.ready =>
+                          const Color.fromARGB(255, 30, 76, 31),
+                        TimerPhase.timerRunning =>
+                          const Color.fromARGB(255, 55, 54, 53),
+                        TimerPhase.intervalTimerRunning =>
+                          const Color.fromARGB(255, 55, 54, 53),
+                        TimerPhase.finished =>
+                          const Color.fromARGB(255, 15, 41, 98),
+                        _ => const Color.fromARGB(255, 30, 76, 31),
+                      },
+                      foregroundColor: Colors.white,
+                      child: switch (currentPhase) {
+                        TimerPhase.ready => const Icon(Icons.play_arrow),
+                        TimerPhase.timerRunning => const Icon(Icons.stop),
+                        TimerPhase.intervalTimerRunning =>
+                          const Icon(Icons.stop),
+                        TimerPhase.finished => const Icon(Icons.refresh),
+                        _ => const Icon(Icons.play_arrow),
+                      },
+                    )
+                  : null,
             ),
-      floatingActionButton: currentPhase == TimerPhase.ready ||
-              currentPhase == TimerPhase.timerRunning ||
-              currentPhase == TimerPhase.intervalTimerRunning ||
-              currentPhase == TimerPhase.finished
-          ? FloatingActionButton(
-              onPressed: () {
-                if (currentPhase == TimerPhase.finished) {
-                  html.window.location.reload();
-                  return;
-                } else {
-                  timerKey.currentState?.toggleTimer();
-                }
-              },
-              tooltip: switch (currentPhase) {
-                TimerPhase.ready => 'Start Timer',
-                TimerPhase.timerRunning => 'Stop Timer',
-                TimerPhase.intervalTimerRunning => 'Stop Timer',
-                TimerPhase.finished => 'Reset Timer',
-                _ => 'Start Timer',
-              },
-              backgroundColor: switch (currentPhase) {
-                TimerPhase.ready => const Color.fromARGB(255, 30, 76, 31),
-                TimerPhase.timerRunning =>
-                  const Color.fromARGB(255, 55, 54, 53),
-                TimerPhase.intervalTimerRunning =>
-                  const Color.fromARGB(255, 55, 54, 53),
-                TimerPhase.finished => const Color.fromARGB(255, 15, 41, 98),
-                _ => const Color.fromARGB(255, 30, 76, 31),
-              },
-              foregroundColor: Colors.white,
-              child: switch (currentPhase) {
-                TimerPhase.ready => const Icon(Icons.play_arrow),
-                TimerPhase.timerRunning => const Icon(Icons.stop),
-                TimerPhase.intervalTimerRunning => const Icon(Icons.stop),
-                TimerPhase.finished => const Icon(Icons.refresh),
-                _ => const Icon(Icons.play_arrow),
-              },
-            )
-          : null,
-    );
+            Container(
+              padding: const EdgeInsets.only(left: 20),
+              child: Align(
+                alignment: Alignment.bottomLeft,
+                child: currentPhase == TimerPhase.ready
+                    ? FloatingActionButton(
+                        onPressed: () {
+                          html.window.location.reload();
+                          return;
+                        },
+                        tooltip: 'Reset Timer',
+                        backgroundColor: const Color.fromARGB(255, 15, 41, 98),
+                        foregroundColor: Colors.white,
+                        child: const Icon(Icons.refresh),
+                      )
+                    : null,
+              ),
+            ),
+          ],
+        ));
   }
 }
