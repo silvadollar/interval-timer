@@ -139,8 +139,7 @@ class _SetupScreenState extends State<SetupScreen> {
             }),
             const SizedBox(height: 20),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 16.0), // distance from screen edge
+              padding: const EdgeInsets.only(left: 16.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
